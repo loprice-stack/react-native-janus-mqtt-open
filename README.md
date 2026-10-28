@@ -1,6 +1,6 @@
 # react-native-janus-mqtt-open
 
-react-native-janus-mqtt-open gives you an easy way to use mqtt client of your choice to connect to the Janus WebRTC serverer is an extension of Janode Node.js adapter for the Janus WebRTC server using MQTT as a transport
+react-native-janus-mqtt-open gives you an easy way to use mqtt client of your choice to connect to the Janus WebRTC server
 
 ## Installation
 

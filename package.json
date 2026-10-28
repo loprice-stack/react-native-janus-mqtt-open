@@ -163,9 +163,6 @@
     ],
     "version": "0.64.0"
   },
-  "dependencies": {
-    "hermes-eslint": "^0.37.0"
-  },
   "allowScripts": {
     "lefthook": true
   }

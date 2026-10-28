@@ -7148,21 +7148,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hermes-eslint@npm:^0.37.0":
-  version: 0.37.0
-  resolution: "hermes-eslint@npm:0.37.0"
-  dependencies:
-    hermes-estree: "npm:0.37.0"
-    hermes-parser: "npm:0.37.0"
-  peerDependencies:
-    eslint: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
-  peerDependenciesMeta:
-    eslint:
-      optional: true
-  checksum: 10c0/5409bc01230169c5b08271bca3c9b52262e71b37b0c961154a5f3da5746b161751f646ac04b51382245d740bc8235063ae60f586d3e477f446afd9c2ed6ab885
-  languageName: node
-  linkType: hard
-
 "hermes-estree@npm:0.25.1":
   version: 0.25.1
   resolution: "hermes-estree@npm:0.25.1"
@@ -10578,7 +10563,6 @@ __metadata:
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-ft-flow: "npm:^3.0.11"
     eslint-plugin-prettier: "npm:^5.5.7"
-    hermes-eslint: "npm:^0.37.0"
     jest: "npm:^29.7.0"
     lefthook: "npm:^2.2.2"
     prettier: "npm:^3.9.10"
