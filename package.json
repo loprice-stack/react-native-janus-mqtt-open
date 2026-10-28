@@ -1,7 +1,7 @@
 {
   "name": "react-native-janus-mqtt-open",
   "version": "0.1.0",
-  "description": "react-native-janus-mqtt-open gives you an easy way to use mqtt client of your choice to connect to the Janus WebRTC serverer is an extension of Janode Node.js adapter for the Janus WebRTC server using MQTT as a transport",
+  "description": "react-native-janus-mqtt-open gives you an easy way to use any mqtt client of your choice to connect to the Janus WebRTC server",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
@@ -15,17 +15,7 @@
   "files": [
     "src",
     "lib",
-    "android",
-    "ios",
-    "cpp",
-    "*.podspec",
-    "react-native.config.js",
-    "!ios/build",
-    "!android/build",
-    "!android/gradle",
-    "!android/gradlew",
-    "!android/gradlew.bat",
-    "!android/local.properties",
+    "licenses",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
@@ -49,7 +39,7 @@
     "type": "git",
     "url": "git+https://github.com/loprice-stack/react-native-janus-mqtt-open.git"
   },
-  "author": "Majuto Lazaro Njola (crackprojects2017@gmail.com) <crackprojects2017@gmail.com> (https://github.com/loprice-stack)",
+  "author": "Majuto Lazaro Njola <crackprojects2017@gmail.com> (https://github.com/loprice-stack)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/loprice-stack/react-native-janus-mqtt-open/issues"
@@ -111,14 +101,7 @@
       ]
     ]
   },
-  "codegenConfig": {
-    "name": "JanusMqttOpenSpec",
-    "type": "modules",
-    "jsSrcsDir": "src",
-    "android": {
-      "javaPackageName": "com.janusmqttopen"
-    }
-  },
+  "codegenConfig": {},
   "prettier": {
     "quoteProps": "consistent",
     "singleQuote": true,
@@ -179,5 +162,11 @@
       "release-it"
     ],
     "version": "0.64.0"
+  },
+  "dependencies": {
+    "hermes-eslint": "^0.37.0"
+  },
+  "allowScripts": {
+    "lefthook": true
   }
 }
