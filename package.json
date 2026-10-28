@@ -1,6 +1,6 @@
 {
   "name": "react-native-janus-mqtt-open",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "react-native-janus-mqtt-open gives you an easy way to use any mqtt client of your choice to connect to the Janus WebRTC server",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
