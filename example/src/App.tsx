@@ -13,7 +13,15 @@ import { Logger } from '../../src/utils';
 import type Session from '../../src/session';
 import VideocallHandle from '../../src/plugins/videocall-plugin';
 import PahoTransport from './paho-transport';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  TextInput,
+  StyleSheet,
+  Switch,
+} from 'react-native';
+import MqttTransport from './mqtt-transport';
 
 const LOG_NS = '[VideoCall.ts]';
 let connection: Connection;
@@ -26,15 +34,23 @@ export default function App() {
   const [caller, setCaller] = useState('callername');
   const [signalingstatechange, setSignalingstatechange] =
     useState('have-local-offer');
-
   const [localstream, setLocalstream] = useState<MediaStream>(null);
   const [remotestream, setRemotestream] = useState<MediaStream>(null);
   const [remoteCandidates, setRemoteCandidates] = useState([]);
   const [callstate, setCallState] = useState('iddle');
   const [remotesdp, setRemoteSdp] = useState(null);
+  const [mqttclass, setMqttClass] = useState('mqtt_mqttclass');
+  const [isEnabled, setIsEnabled] = useState(false);
 
-  async function janusMqttConect() {
-    const mqttclass = await new PahoTransport(
+  const toggleSwitch = async () => {
+    await setIsEnabled((previousState) => !previousState);
+    isEnabled ? setMqttClass('mqtt_mqttclass') : setMqttClass('paho_mqttclass');
+    Logger(mqttclass);
+    Logger(isEnabled);
+  };
+
+  async function janusMqttConnect() {
+    const paho_mqttclass = await new PahoTransport(
       {
         serverUrl: 'tuchati.loprice.co.tz',
         port: 5281,
@@ -59,7 +75,28 @@ export default function App() {
       }
     );
 
-    connection = await new Connection(mqttclass);
+    const mqtt_mqttclass = new MqttTransport({
+      protocol: 'wss',
+      host: 'tuchati.loprice.co.tz',
+      port: 5281,
+      path: '/mqtt',
+      protocolVersion: 5,
+      clientId: undefined,
+      username: 'test@tuchati.loprice.co.tz',
+      password: 'test',
+      reconnectPeriod: 500,
+      queueQoSZero: false,
+      resubscribe: true,
+      clean: true,
+      keepalive: 60,
+      properties: 0,
+      sessionExpiryInterval: 600,
+      forceNativeWebSocket: true,
+    });
+
+    connection = await new Connection(
+      mqttclass === 'mqtt_mqttclass' ? mqtt_mqttclass : paho_mqttclass
+    );
   }
 
   async function createSession() {
@@ -275,10 +312,20 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={{ margin: 4, fontSize: 20 }}>
-        Janus Mqtt Video Call Api test
+        Janus Open Mqtt (Mqtt and Paho) Video Call Api test
       </Text>
       <View style={{ flexDirection: 'row', gap: 10 }}>
-        <Button title="Connect" onPress={() => janusMqttConect()} />
+        <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+          <Text>Paho Mqtt</Text>
+          <Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View>
+        <Button title="Connect" onPress={() => janusMqttConnect()} />
         <Button title="Create session" onPress={() => createSession()} />
         <Button title="Create handle" onPress={() => createHandle()} />
       </View>

@@ -33,7 +33,9 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "mqtt",
+    "react-native-janus-mqtt"
   ],
   "repository": {
     "type": "git",

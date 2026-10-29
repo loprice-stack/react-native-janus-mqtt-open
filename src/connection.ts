@@ -56,7 +56,9 @@ class Connection extends EventEmitter {
             this.setJanusMessageListerner2('status');
             Logger(`${LOG_NS}  connected successfully`);
           },
-          () => {}
+          (error: any) => {
+            Logger(`${LOG_NS}  connection lost! reason: ${error}`);
+          }
         );
       } else {
         Logger(

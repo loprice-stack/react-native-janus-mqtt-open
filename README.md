@@ -1,6 +1,10 @@
 # react-native-janus-mqtt-open
 
-react-native-janus-mqtt-open gives you an easy way to use mqtt client of your choice to connect to the Janus WebRTC server
+react-native-janus-mqtt-open gives you an easy way to use Mqtt Client of your choice to connect to Janus WebRTC server through janus.transport.mqtt plugin
+
+## Plugins implementations
++ videocall-plugin
++ videoroom-plugin
 
 ## Installation
 
@@ -155,7 +159,7 @@ export default MqttTransport;
 ```
 
 
-Create conection and session
+Create connection and session
 
 ```ts
 
@@ -171,7 +175,7 @@ let session: Session;
 let handle: any;
 
 
-  async function janusMqttConect() {
+  async function janusMqttConnect() {
 
       const mqttclass = await new MqttTransport(
       new Paho.Client(serverUrl, Number(port), clientId),
@@ -213,5 +217,3 @@ let handle: any;
 MIT
 
 ---
-
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
