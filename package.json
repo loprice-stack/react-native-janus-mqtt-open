@@ -16,6 +16,13 @@
     "src",
     "lib",
     "licenses",
+    "android",
+    "react-native.config.js",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
@@ -177,8 +184,5 @@
   },
   "allowScripts": {
     "lefthook": true
-  },
-  "dependencies": {
-    "@react-native-community/cli": "^20.2.0"
   }
 }
