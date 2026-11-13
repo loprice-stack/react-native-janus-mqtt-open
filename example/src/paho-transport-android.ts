@@ -4,11 +4,12 @@
  * just check the suggested functions which you
  * mustimplement in to you own wraper
  */
-import Paho from 'paho-mqtt';
 import { getNumericID, Logger, randomString } from '../../src/utils';
 import type { JanusAdminOptions, JanusOptions } from '../../src/mqtt-transport';
+import { DeviceEventEmitter } from 'react-native';
+import { NativePahoMqttTransport } from 'react-native-janus-mqtt-open';
 
-const LOG_NS = '[paho-transport.ts]';
+const LOG_NS = '[paho-transport-android.ts]';
 
 export type PahoOptions = {
   serverUrl: string;
@@ -30,8 +31,8 @@ export type willOptions = {
   message: string;
 };
 
-class PahoTransport {
-  mqttclient: any;
+class PahoTransportAndroid {
+  //mqttclient: any;
   //@ts-ignore
   janus: JanusOptions = {};
   //@ts-ignore
@@ -84,36 +85,29 @@ class PahoTransport {
     this.options.keepAliveInterval = keepAliveInterval;
     this.options.reconnect = reconnect;
     this.options.willMessageOptions = willMessageOptions;
-    //this.options.onSuccess = onSuccess;
     this.id = getNumericID();
-    Logger(`${LOG_NS} [${this.id}] creating new mqtt transport connection`);
-    const client = new Paho.Client(serverUrl, Number(port), clientId);
-    this.mqttclient = client;
-  }
-
-  connect(onSuccess: Function) {
-    this.mqttclient.connect({
-      userName: this.options.userName,
-      password: this.options.password,
-      useSSL: this.options.useSSL,
-      keepAliveInterval: 60,
-      onSuccess: onSuccess,
-      willMessage: this.message(),
-    });
-  }
-
-  private message() {
-    var lastWillMessage = new Paho.Message(
-      this.options.willMessageOptions.message
+    Logger(
+      `${LOG_NS} [${this.id}] creating new paho android mqtt transport class`
     );
-    lastWillMessage.destinationName = this.options.willMessageOptions.topic;
-    lastWillMessage.qos = this.options.willMessageOptions.qos;
-    lastWillMessage.retained = this.options.willMessageOptions.retain;
-    return lastWillMessage;
+    NativePahoMqttTransport.setPahoOptions(this.options);
+  }
+
+  connect(onSuccess: () => void, onError: (error: string) => void) {
+    NativePahoMqttTransport.connect(
+      () => {
+        onSuccess();
+      },
+      (error: string) => {
+        onError(error);
+      }
+    );
   }
 
   testTransportation() {
-    this.publish(this.janus.tojanus, { janus: 'info' });
+    NativePahoMqttTransport.publish(
+      this.janus.tojanus,
+      JSON.stringify({ janus: 'info' })
+    );
   }
 
   getJanusOptions() {
@@ -126,68 +120,81 @@ class PahoTransport {
 
   disconnect() {
     if (this.isClientDefined()) {
-      this.mqttclient.disconnect();
+      NativePahoMqttTransport.disconnect();
     }
   }
 
   isClientDefined() {
-    if (this.mqttclient) {
+    if (NativePahoMqttTransport) {
       return true;
     } else {
       Logger(
-        `${LOG_NS} mqttclient is not defined:  mqttclient: "${JSON.stringify(this.mqttclient)}"`
+        `${LOG_NS} mqttclient is not defined:  mqttclient: "${JSON.stringify(NativePahoMqttTransport)}"`
       );
-
       return false;
     }
   }
 
   // called when the mqttclient loses its connection
-  onConnected(onConnected: any) {
-    this.mqttclient.onConnected = onConnected;
+  onConnected(onConnected: () => void) {
+    NativePahoMqttTransport.onConnected = onConnected;
   }
 
   // called when the mqttclient loses its connection
-  onConnectionLost(onConnectionLost: any) {
-    this.mqttclient.onConnectionLost = onConnectionLost;
+  onConnectionLost(onConnectionLost: (error: any) => void) {
+    DeviceEventEmitter.removeAllListeners();
+    NativePahoMqttTransport.onConnectionLost(onConnectionLost);
   }
 
   // called when the message arrive
-  onMessageArrived(onMessageArrived: any) {
-    //Do the filtering before sending message to react-native-janus-mqtt-open
-    //Make sure only janus messages are passed
+  //this is used by connection.ts
+  onMessageArrived(onMessageArrived: (payload: string) => void) {
     if (this.isClientDefined()) {
-      this.mqttclient.onMessageArrived = (payload: any) => {
-        if (
-          this.janus.fromjanus === payload.topic ||
-          this.janusadmin.fromjanusadmin === payload.topic
-        ) {
-          const janus_message = payload.payloadString;
-          onMessageArrived(janus_message);
-        }
-      };
+      //We dont have good way to do this right now
+      NativePahoMqttTransport.onMessageArrived(() => {});
+      //Just simply listen to this one topic.
+      // We will implement this the right way later
+      DeviceEventEmitter.addListener('from-janus', (payload: string) => {
+        onMessageArrived(payload);
+      });
     }
   }
 
   // called when the message arrive
-  onMessageDelivered(onMessageDelivered: any) {
+  //You can use some thing like this for your other implementation
+  onMessageArrived2(onMessageArrived: (payload: string) => void) {
     if (this.isClientDefined()) {
-      this.mqttclient.onMessageDelivered = onMessageDelivered;
+      //We dont have good way to do this right now
+      NativePahoMqttTransport.onMessageArrived(() => {});
+      //Just simply listen to this any topic.
+      // We will implement this the right way later
+      DeviceEventEmitter.addListener(
+        'any topic you wish to listern',
+        (payload: string) => {
+          onMessageArrived(payload);
+        }
+      );
+    }
+  }
+
+  // called when the message arrive
+  onMessageDelivered(onMessageDelivered: () => void) {
+    if (this.isClientDefined()) {
+      NativePahoMqttTransport.onMessageDelivered(onMessageDelivered);
     }
   }
 
   publish(topic: string, message: any) {
     if (this.isClientDefined()) {
-      this.mqttclient.publish(topic, JSON.stringify(message));
+      NativePahoMqttTransport.publish(topic, JSON.stringify(message));
     }
   }
 
-  subscribe(topic: String) {
+  subscribe(topic: string) {
     if (this.isClientDefined()) {
-      this.mqttclient.subscribe(topic);
-      Logger(`${LOG_NS} successfully subscribe to topic: ${topic}`);
+      NativePahoMqttTransport.subscribe(topic);
     }
   }
 }
 
-export default PahoTransport;
+export default PahoTransportAndroid;

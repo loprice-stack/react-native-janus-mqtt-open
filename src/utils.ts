@@ -33,6 +33,7 @@ export const getNumericID = (() => {
   };
 })();
 
+//set to false to disable logs
 export let isDebug: boolean = true;
 
 export const Logger = (message: any) => {

@@ -12,7 +12,7 @@ import { Connection } from 'react-native-janus-mqtt-open';
 import { Logger } from '../../src/utils';
 import type Session from '../../src/session';
 import VideocallHandle from '../../src/plugins/videocall-plugin';
-import PahoTransport from './paho-transport';
+
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import {
   Switch,
 } from 'react-native';
 import MqttTransport from './mqtt-transport';
+import PahoTransportAndroid from './paho-transport-android';
 
 const LOG_NS = '[VideoCall.ts]';
 let connection: Connection;
@@ -50,15 +51,15 @@ export default function App() {
   };
 
   async function janusMqttConnect() {
-    const paho_mqttclass = await new PahoTransport(
+    const paho_mqttclass = await new PahoTransportAndroid(
       {
-        serverUrl: 'tuchati.loprice.co.tz',
+        serverUrl: 'wss://loprice.co.tz:5281',
         port: 5281,
         clientId: undefined,
-        userName: 'test@tuchati.loprice.co.tz',
+        userName: 'test@loprice.co.tz',
         password: 'test',
         useSSL: true,
-        keepAliveInterval: 0,
+        keepAliveInterval: 30,
         reconnect: true,
         willMessageOptions: {
           topic: 'topic',
@@ -95,7 +96,7 @@ export default function App() {
     });
 
     connection = await new Connection(
-      mqttclass === 'mqtt_mqttclass' ? mqtt_mqttclass : paho_mqttclass
+      mqttclass ? paho_mqttclass : mqtt_mqttclass
     );
   }
 
@@ -331,6 +332,7 @@ export default function App() {
       </View>
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <Button title="Register" onPress={() => register()} />
+
         <TextInput
           id="nm"
           style={styles.input}
@@ -388,7 +390,7 @@ export default function App() {
         style={{
           position: 'absolute',
           alignSelf: 'center',
-          bottom: 2,
+          bottom: 70,
           flexDirection: 'row',
           gap: 10,
         }}

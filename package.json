@@ -103,7 +103,17 @@
       ]
     ]
   },
-  "codegenConfig": {},
+  "codegenConfig": {
+    "name": "NativePahoMqttTransportSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "outputDir": {
+      "android": "android/generated"
+    },
+    "android": {
+      "javaPackageName": "tz.co.loprice.pahotransport"
+    }
+  },
   "prettier": {
     "quoteProps": "consistent",
     "singleQuote": true,
@@ -167,5 +177,8 @@
   },
   "allowScripts": {
     "lefthook": true
+  },
+  "dependencies": {
+    "@react-native-community/cli": "^20.2.0"
   }
 }

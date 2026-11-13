@@ -20,14 +20,14 @@ export type MqttClientClass = {
   janus: JanusOptions;
   janusadmin: JanusAdminOptions;
 
-  connect: (onSuccess: Function, onError: Function) => void;
-  onConnected: (onConnected: Function) => void;
+  connect: (onSuccess: () => void, onError: (error: any) => void) => void;
+  onConnected: (onConnected: () => void) => void;
 
   disconnect: () => void;
-  onConnectionLost: (onConnectionLost: Function) => void;
+  onConnectionLost: (onConnectionLost: (error: any) => void) => void;
 
-  onMessageArrived: (onMessageArrived: Function) => void;
-  onMessageDelivered: (onMessageDelivered: Function) => void;
+  onMessageArrived: (onMessageArrived: (payload: any) => void) => void;
+  onMessageDelivered: (onMessageDelivered: () => void) => void;
 
   publish: (topic: string, message: string) => void;
   subscribe: (topic: string) => void;

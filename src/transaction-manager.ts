@@ -124,10 +124,6 @@ class TransactionManager {
     Logger(owner);
     Logger(this.transactions);
     Logger(
-      `${LOG_NS} [${tx.owner.id}]-------------------------------transactions--------------------------------------------`
-    );
-
-    Logger(
       `${LOG_NS} [${tx.owner.id}] created new transaction ${id}, request "${tx.request}"`
     );
     return tx;
