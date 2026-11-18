@@ -89,10 +89,13 @@ class PahoTransportAndroid {
     Logger(
       `${LOG_NS} [${this.id}] creating new paho android mqtt transport class`
     );
-    NativePahoMqttTransport.setPahoOptions(this.options);
+    if (NativePahoMqttTransport) {
+      NativePahoMqttTransport.setPahoOptions(this.options);
+    }
   }
 
   connect(onSuccess: () => void, onError: (error: string) => void) {
+    //@ts-ignore
     NativePahoMqttTransport.connect(
       () => {
         onSuccess();
@@ -104,6 +107,7 @@ class PahoTransportAndroid {
   }
 
   testTransportation() {
+    //@ts-ignore
     NativePahoMqttTransport.publish(
       this.janus.tojanus,
       JSON.stringify({ janus: 'info' })
@@ -120,6 +124,7 @@ class PahoTransportAndroid {
 
   disconnect() {
     if (this.isClientDefined()) {
+      //@ts-ignore
       NativePahoMqttTransport.disconnect();
     }
   }
@@ -137,12 +142,14 @@ class PahoTransportAndroid {
 
   // called when the mqttclient loses its connection
   onConnected(onConnected: () => void) {
+    //@ts-ignore
     NativePahoMqttTransport.onConnected = onConnected;
   }
 
   // called when the mqttclient loses its connection
   onConnectionLost(onConnectionLost: (error: any) => void) {
     DeviceEventEmitter.removeAllListeners();
+    //@ts-ignore
     NativePahoMqttTransport.onConnectionLost(onConnectionLost);
   }
 
@@ -151,6 +158,7 @@ class PahoTransportAndroid {
   onMessageArrived(onMessageArrived: (payload: string) => void) {
     if (this.isClientDefined()) {
       //We dont have good way to do this right now
+      //@ts-ignore
       NativePahoMqttTransport.onMessageArrived(() => {});
       //Just simply listen to this one topic.
       // We will implement this the right way later
@@ -165,6 +173,7 @@ class PahoTransportAndroid {
   onMessageArrived2(onMessageArrived: (payload: string) => void) {
     if (this.isClientDefined()) {
       //We dont have good way to do this right now
+      //@ts-ignore
       NativePahoMqttTransport.onMessageArrived(() => {});
       //Just simply listen to this any topic.
       // We will implement this the right way later
@@ -180,18 +189,21 @@ class PahoTransportAndroid {
   // called when the message arrive
   onMessageDelivered(onMessageDelivered: () => void) {
     if (this.isClientDefined()) {
+      //@ts-ignore
       NativePahoMqttTransport.onMessageDelivered(onMessageDelivered);
     }
   }
 
   publish(topic: string, message: any) {
     if (this.isClientDefined()) {
+      //@ts-ignore
       NativePahoMqttTransport.publish(topic, JSON.stringify(message));
     }
   }
 
   subscribe(topic: string) {
     if (this.isClientDefined()) {
+      //@ts-ignore
       NativePahoMqttTransport.subscribe(topic);
     }
   }

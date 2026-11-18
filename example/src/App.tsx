@@ -41,13 +41,15 @@ export default function App() {
   const [callstate, setCallState] = useState('iddle');
   const [remotesdp, setRemoteSdp] = useState(null);
   const [mqttclass, setMqttClass] = useState('mqtt_mqttclass');
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(true);
 
   const toggleSwitch = async () => {
-    await setIsEnabled((previousState) => !previousState);
-    isEnabled ? setMqttClass('mqtt_mqttclass') : setMqttClass('paho_mqttclass');
+    await setIsEnabled((previousState) => {
+      Logger(!previousState);
+      return !previousState;
+    });
+    isEnabled ? setMqttClass('paho_mqttclass') : setMqttClass('mqtt_mqttclass');
     Logger(mqttclass);
-    Logger(isEnabled);
   };
 
   async function janusMqttConnect() {
@@ -78,12 +80,12 @@ export default function App() {
 
     const mqtt_mqttclass = new MqttTransport({
       protocol: 'wss',
-      host: 'tuchati.loprice.co.tz',
+      host: 'loprice.co.tz',
       port: 5281,
       path: '/mqtt',
       protocolVersion: 5,
       clientId: undefined,
-      username: 'test@tuchati.loprice.co.tz',
+      username: 'test@loprice.co.tz',
       password: 'test',
       reconnectPeriod: 500,
       queueQoSZero: false,
@@ -96,7 +98,7 @@ export default function App() {
     });
 
     connection = await new Connection(
-      mqttclass ? paho_mqttclass : mqtt_mqttclass
+      isEnabled ? paho_mqttclass : mqtt_mqttclass
     );
   }
 

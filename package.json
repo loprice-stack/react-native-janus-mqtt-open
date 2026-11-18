@@ -39,7 +39,6 @@
   },
   "keywords": [
     "react-native",
-    "ios",
     "android",
     "mqtt",
     "react-native-janus-mqtt"

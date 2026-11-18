@@ -1,5 +1,5 @@
 import type { TurboModule } from 'react-native';
-import { TurboModuleRegistry } from 'react-native';
+import { Platform, TurboModuleRegistry } from 'react-native';
 
 export type PahoOptions = {
   serverUrl: string;
@@ -48,6 +48,12 @@ export interface Spec extends TurboModule {
   subscribe: (topic: string) => void;
 }
 
-export default TurboModuleRegistry.getEnforcing<Spec>(
-  'NativePahoMqttTransport'
-);
+const getNativeTransportModule = () => {
+  if (Platform.OS === 'web') {
+    return;
+  }
+
+  return TurboModuleRegistry.getEnforcing<Spec>('NativePahoMqttTransport');
+};
+
+export default getNativeTransportModule();
